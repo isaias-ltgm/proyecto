@@ -74,7 +74,7 @@ Proyecto-Restaurante/
 <p>│   └── index.html</p>
 
 ## DIAGRAMA ENTIDAD-RELACIÓN
-<img src='ENTIDA-RELACIÓN.jpg'>
+<img src='ENTIDA-RELACIÓN.jpeg'>
 
 ## DIAGRAMA RELACIONAL
 
