@@ -28,9 +28,9 @@ interactuará el dueño del negocio.
 
 ## REQUERIMIENTOS FUNCIONALES
 
-| N°            | ASISTENCIA    |
-| ------------- | ------------- |
-| RF01 | El sistema debe registrar productos con nombre, categoría, precio unitario y 
+| N°           |  ASISTENCIA  |
+| ------------ | ------------ |
+|     RF01     | El sistema debe registrar productos con nombre, categoría, precio unitario y 
 cantidad en stock mediante un formulario web. |
 | RF02 | El sistema debe registrar las ventas realizadas indicando los productos 
 vendidos, cantidad y fecha, guardándolos en la base de datos MySQL. | 
