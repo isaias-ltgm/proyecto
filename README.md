@@ -33,4 +33,12 @@ interactuará el dueño del negocio.
 | RF01 | El sistema debe registrar productos con nombre, categoría, precio unitario y cantidad en stock mediante un formulario web. |
 | RF02 | El sistema debe registrar las ventas realizadas indicando los productos vendidos, cantidad y fecha, guardándolos en la base de datos MySQL. | 
 | RF03 | El sistema debe actualizar el stock de un producto automáticamente en la base de datos al registrar una venta. |
+| RF04 | El sistema debe mostrar el historial de ventas con filtros por fecha y categoría, consumiendo la API REST del backend. |
 
+## REQUERIMIENTOS NO FUNCIONALES 
+
+| N°           |  ASISTENCIA  |
+| ------------ | ------------ |
+| RNF01 | Rendimiento: La API REST de Spring Boot debe responder las solicitudes del frontend en menos de 3 segundos. |
+| RNF02 | Seguridad: El sistema debe validar los datos enviados desde el frontend antes de ser procesados por el backend. 
+| RNF03 | Usabilidad: La interfaz desarrollada en HTML, CSS y JavaScript debe ser simple e intuitiva para el dueño del negocio.
