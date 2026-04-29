@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bodeguita de Don Pepito — Detalle Ventas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* Estilos específicos de esta página */
+    .filtros {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filtros select,
+    .filtros input[type="date"] {
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--dark);
+      background: var(--white);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .filtros select:focus,
+    .filtros input[type="date"]:focus {
+      border-color: var(--red);
+    }
+
+    .btn-exportar {
+      margin-left: auto;
+      padding: 7px 16px;
+      background: var(--red);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      font-weight: 500;
+      transition: opacity 0.15s;
+    }
+
+    .btn-exportar:hover { opacity: 0.85; }
+
+    .resumen-ventas {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .rv-card {
+      background: var(--white);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .rv-card:nth-child(1) { animation-delay: 0.05s; }
+    .rv-card:nth-child(2) { animation-delay: 0.10s; }
+    .rv-card:nth-child(3) { animation-delay: 0.15s; }
+    .rv-card:nth-child(4) { animation-delay: 0.20s; }
+
+    .rv-label {
+      font-size: 9.5px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .rv-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .rv-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .card.full {
+      grid-column: 1 / -1;
+    }
+
+    .tabla-detalle th:last-child,
+    .tabla-detalle td:last-child {
+      text-align: right;
+    }
+
+    .monto { font-family: 'Sora', sans-serif; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-pill">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 7h20l-1.5 9A2 2 0 0118.5 18h-13a2 2 0 01-1.98-1.72L2 7z"/>
+          <path d="M2 7l2-4h16l2 4"/>
+          <rect x="9" y="13" width="6" height="5" rx="1"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <div class="logo-name">Bodeguita de<br>Don Pepito</div>
+        <div class="logo-sub">Panel de control</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="nav-section-label">Principal</div>
+
+    <a class="nav-item" href="inicio.html">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+      Inicio
+    </a>
+
+    <a class="nav-item active" href="detalle_ventas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+        <rect x="9" y="3" width="6" height="4" rx="1"/>
+        <line x1="9" y1="12" x2="15" y2="12"/>
+        <line x1="9" y1="16" x2="13" y2="16"/>
+      </svg>
+      Detalle ventas
+    </a>
+
+    <a class="nav-item" href="inventario.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+        <line x1="12" y1="22.08" x2="12" y2="12"/>
+      </svg>
+      Inventario
+    </a>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="logout-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Cerrar sesión
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="page-title">Detalle de ventas</div>
+      <div class="page-sub" id="fecha-hoy">Cargando fecha...</div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        Buscar...
+      </div>
+      <div class="avatar" title="Don Pepito">DP</div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- FILTROS -->
+    <div class="card" style="flex-direction:row; align-items:center; padding:14px 20px; flex:none;">
+      <div class="filtros" style="flex:1;">
+        <label style="font-size:12px; color:var(--muted);">Período</label>
+        <select>
+          <option>Hoy</option>
+          <option>Ayer</option>
+          <option>Esta semana</option>
+          <option>Este mes</option>
+          <option>Rango personalizado</option>
+        </select>
+        <input type="date" value="2026-04-28"/>
+        <select>
+          <option>Todos los turnos</option>
+          <option>Mañana</option>
+          <option>Mediodía</option>
+          <option>Tarde</option>
+          <option>Noche</option>
+        </select>
+        <select>
+          <option>Todos los estados</option>
+          <option>OK</option>
+          <option>Stock bajo</option>
+        </select>
+        <button class="btn-exportar">⬇ Exportar</button>
+      </div>
+    </div>
+
+    <!-- TARJETAS RESUMEN -->
+    <div class="resumen-ventas">
+      <div class="rv-card">
+        <div class="rv-label">Total del día</div>
+        <div class="rv-val">S/ 1,240</div>
+        <div class="rv-sub">↑ +12% vs ayer</div>
+      </div>
+      <div class="rv-card">
+        <div class="rv-label">N° de ventas</div>
+        <div class="rv-val">38</div>
+        <div class="rv-sub">↑ 5 más que ayer</div>
+      </div>
+      <div class="rv-card">
+        <div class="rv-label">Ticket promedio</div>
+        <div class="rv-val">S/ 32.63</div>
+        <div class="rv-sub">Por venta</div>
+      </div>
+      <div class="rv-card">
+        <div class="rv-label">Mejor turno</div>
+        <div class="rv-val">Mediodía</div>
+        <div class="rv-sub">S/ 560 recaudados</div>
+      </div>
+    </div>
+
+    <!-- TABLA DETALLADA -->
+    <div class="card" style="flex:1; min-height:0;">
+      <div class="card-title">Registro de ventas</div>
+      <div class="table-wrap">
+        <table class="tabla-detalle">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Turno</th>
+              <th>Cant.</th>
+              <th>P. Unit.</th>
+              <th>Total</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--muted);">001</td>
+              <td>Pan francés</td>
+              <td>Panadería</td>
+              <td>Mañana</td>
+              <td>20</td>
+              <td>S/ 1.00</td>
+              <td class="monto">S/ 20.00</td>
+              <td><span class="badge ok">OK</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">002</td>
+              <td>Torta de chocolate</td>
+              <td>Pastelería</td>
+              <td>Mediodía</td>
+              <td>2</td>
+              <td>S/ 40.00</td>
+              <td class="monto">S/ 80.00</td>
+              <td><span class="badge ok">OK</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">003</td>
+              <td>Croissant</td>
+              <td>Panadería</td>
+              <td>Mañana</td>
+              <td>8</td>
+              <td>S/ 4.00</td>
+              <td class="monto">S/ 32.00</td>
+              <td><span class="badge low">Bajo</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">004</td>
+              <td>Empanada de carne</td>
+              <td>Salado</td>
+              <td>Mediodía</td>
+              <td>15</td>
+              <td>S/ 3.00</td>
+              <td class="monto">S/ 45.00</td>
+              <td><span class="badge ok">OK</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">005</td>
+              <td>Kekes de vainilla</td>
+              <td>Pastelería</td>
+              <td>Tarde</td>
+              <td>12</td>
+              <td>S/ 3.00</td>
+              <td class="monto">S/ 36.00</td>
+              <td><span class="badge ok">OK</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">006</td>
+              <td>Galletas de mantequilla</td>
+              <td>Pastelería</td>
+              <td>Tarde</td>
+              <td>30</td>
+              <td>S/ 2.00</td>
+              <td class="monto">S/ 60.00</td>
+              <td><span class="badge low">Bajo</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">007</td>
+              <td>Ciabatta integral</td>
+              <td>Panadería</td>
+              <td>Mañana</td>
+              <td>6</td>
+              <td>S/ 9.00</td>
+              <td class="monto">S/ 54.00</td>
+              <td><span class="badge ok">OK</span></td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);">008</td>
+              <td>Pie de manzana</td>
+              <td>Pastelería</td>
+              <td>Noche</td>
+              <td>4</td>
+              <td>S/ 20.00</td>
+              <td class="monto">S/ 80.00</td>
+              <td><span class="badge ok">OK</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
