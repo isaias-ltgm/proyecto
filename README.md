@@ -42,3 +42,38 @@ interactuará el dueño del negocio.
 | RNF01 | Rendimiento: La API REST de Spring Boot debe responder las solicitudes del frontend en menos de 3 segundos. |
 | RNF02 | Seguridad: El sistema debe validar los datos enviados desde el frontend antes de ser procesados por el backend. 
 | RNF03 | Usabilidad: La interfaz desarrollada en HTML, CSS y JavaScript debe ser simple e intuitiva para el dueño del negocio.
+
+## STACK COMPLETO
+1. Trello = Gestión del proyecto (Kanban)
+2. Draw.io = Diagrama ER + Diagrama de Clases
+3. Figma = Wireframe + Diseño UI/UX
+4. MySQL Workbench = Diseñar y administrar BD
+5. IntelliJ = Frontend (HTML,CSS,JS) + Backend (Spring Boot)
+6. XAMPP = Servidor Tomcat para correr la app
+
+## TECNOLOGIAS UTILIZADAS
+- Java 17
+- Spring Boot 3
+- MySQL 8
+- HTML5, CSS3, JavaScript
+- IntelliJ IDEA
+- XAMPP (Tomcat)
+- MySQL Workbench
+- Figma (diseño UI/UX)
+- Draw.io (diagramas)
+  
+## ESTRUCTURA
+Proyecto-Restaurante/
+<p>├── backend/          → Spring Boot (Java)</p>
+<p>│   ├── src/</p>
+<p>│   ├── pom.xml</p>
+<p>│   └── ...</p>
+<P>├── frontend/         → HTML, CSS, JS</p>
+<p>│   ├── css/</p>
+<p>│   ├── js/</p>
+<p>│   └── index.html</p>
+
+## BASE DE DATOS 
+```MySQL
+H
+```
