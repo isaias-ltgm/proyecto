@@ -73,6 +73,11 @@ Proyecto-Restaurante/
 <p>│   ├── js/</p>
 <p>│   └── index.html</p>
 
+## DIAGRAMA ENTIDAD-RELACIÓN
+<img src='ENTIDA-RELACIÓN.jpg'>
+
+## DIAGRAMA RELACIONAL
+
 ## BASE DE DATOS 
 ```MySQL
 H
