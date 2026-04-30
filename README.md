@@ -80,5 +80,38 @@ Proyecto-Restaurante/
 
 ## BASE DE DATOS 
 ```MySQL
-H
+create database bodega_pepito;
+use bodega_pepito;
+
+create table categoria(
+id_categoria int auto_increment primary key,
+nombre varchar(20),
+descricion varchar(200)
+);
+
+create table producto(
+id_producto int auto_increment primary key,
+nombre_producto varchar(30),
+precio_unitario boolean,
+stock int,
+id_categoria int null, 
+foreign key(id_categoria) REFERENCES categoria(id_categoria)
+);
+
+create table venta(
+id_venta int auto_increment primary key,
+fecha  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+total_venta int
+);
+
+
+CREATE TABLE detalle_venta (
+    id_detalle_venta INT AUTO_INCREMENT PRIMARY KEY,
+    precio_unitario DECIMAL,
+    id_producto INT NULL,
+    id_venta INT NULL,
+    FOREIGN KEY (id_producto) REFERENCES producto(id_producto) ON DELETE SET NULL,
+    FOREIGN KEY (id_venta) REFERENCES venta(id_venta) on delete set null
+);
+
 ```
