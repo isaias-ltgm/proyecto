@@ -3,6 +3,7 @@ package com.senati.BodegaPepito.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "venta")
@@ -18,7 +19,8 @@ public class Venta {
     @Column(name = "total_venta")
     private Integer totalVenta;
 
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "venta")
+    @JsonManagedReference
     private List<DetalleVenta> detalles;
 
     // Constructor vacío

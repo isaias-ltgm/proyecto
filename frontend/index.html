@@ -1,109 +1,78 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="Es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bodega Pepito</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Minimarket Pepito</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="nav-brand">
-            <span class="brand-icon">🏪</span>
-            <span class="brand-name">Bodega Pepito</span>
+
+    <!-- TOPBAR (solo visible en móvil) -->
+    <div class="topbar">
+        <div class="title-business">
+            <span>Minimarket Pepito</span>
         </div>
-        <ul class="nav-links">
-            <li><a href="index.html" class="nav-link active">Inicio</a></li>
-            <li><a href="categorias.html" class="nav-link">Categorías</a></li>
-            <li><a href="productos.html" class="nav-link">Productos</a></li>
-            <li><a href="ventas.html" class="nav-link">Ventas</a></li>
-            <li><a href="detalles.html" class="nav-link">Detalle Ventas</a></li>
+        <div class="btn-menu">
+            <button class="hamburger" aria-label="Abrir menú">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="overlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">MINIMARKET PEPITO</div>
+        <ul>
+            <li>
+                <a href="index.html" class="activo" data-page="home">
+                    <i class="fa-solid fa-house"></i><span>Inicio</span>
+                </a>
+            </li>
+            <li>
+                <a href="categorias.html" data-page="categorias">
+                    <i class="fa-solid fa-clipboard-list"></i><span>Categorías</span>
+                </a>
+            </li>
+            <li>
+                <a href="ventas.html" data-page="ventas">
+                    <i class="fa-solid fa-kitchen-set"></i><span>Ventas</span>
+                </a>
+            </li>
+            <li>
+                <a href="productos.html" data-page="productos">
+                    <i class="fa-solid fa-user-check"></i><span>Productos</span>
+                </a>
+            </li>
+            <li>
+                <a href="detalles.html" data-page="detalles">
+                    <i class="fa-solid fa-pen-to-square"></i><span>Detalle Venta</span>
+                </a>
+            </li>
         </ul>
-    </nav>
+    </aside>
 
-    <main class="main-content">
-        <div class="dashboard-header">
-            <h1>Panel de Control</h1>
-            <p class="subtitle">Resumen general de la bodega</p>
-        </div>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+        <nav class="breadcrumb">
+            <span>Inicio</span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span id="breadcrumb-page">Categorías</span>
+        </nav>
+        <div class="main-content">
 
-        <div class="stats-grid" id="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon cat-icon">📦</div>
-                <div class="stat-info">
-                    <span class="stat-label">Categorías</span>
-                    <span class="stat-value" id="total-categorias">--</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon prod-icon">🛒</div>
-                <div class="stat-info">
-                    <span class="stat-label">Productos</span>
-                    <span class="stat-value" id="total-productos">--</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon venta-icon">💰</div>
-                <div class="stat-info">
-                    <span class="stat-label">Ventas</span>
-                    <span class="stat-value" id="total-ventas">--</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon detalle-icon">📋</div>
-                <div class="stat-info">
-                    <span class="stat-label">Detalles</span>
-                    <span class="stat-value" id="total-detalles">--</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="quick-links">
-            <h2>Acceso Rápido</h2>
-            <div class="link-cards">
-                <a href="categorias.html" class="link-card">
-                    <span class="link-icon">📦</span>
-                    <span class="link-title">Gestionar Categorías</span>
-                    <span class="link-desc">Crear, editar y eliminar categorías</span>
-                </a>
-                <a href="productos.html" class="link-card">
-                    <span class="link-icon">🛒</span>
-                    <span class="link-title">Gestionar Productos</span>
-                    <span class="link-desc">Administrar el inventario</span>
-                </a>
-                <a href="ventas.html" class="link-card">
-                    <span class="link-icon">💰</span>
-                    <span class="link-title">Gestionar Ventas</span>
-                    <span class="link-desc">Registrar y consultar ventas</span>
-                </a>
-                <a href="detalles.html" class="link-card">
-                    <span class="link-icon">📋</span>
-                    <span class="link-title">Detalle de Ventas</span>
-                    <span class="link-desc">Ver el desglose de cada venta</span>
-                </a>
-            </div>
         </div>
     </main>
 
-    <script src="js/api.js"></script>
-    <script>
-        async function cargarEstadisticas() {
-            try {
-                const [categorias, productos, ventas, detalles] = await Promise.all([
-                    API.get('/categorias'),
-                    API.get('/productos'),
-                    API.get('/ventas'),
-                    API.get('/detalles-venta')
-                ]);
-                document.getElementById('total-categorias').textContent = categorias.length;
-                document.getElementById('total-productos').textContent = productos.length;
-                document.getElementById('total-ventas').textContent = ventas.length;
-                document.getElementById('total-detalles').textContent = detalles.length;
-            } catch (e) {
-                console.error('Error cargando estadísticas', e);
-            }
-        }
-        cargarEstadisticas();
-    </script>
+    <script src="js/sidebar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

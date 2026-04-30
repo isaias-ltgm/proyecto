@@ -2,6 +2,8 @@ package com.senati.BodegaPepito.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 @Table(name = "detalle_venta")
@@ -16,10 +18,12 @@ public class DetalleVenta {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_producto", nullable = true)
+    @JsonBackReference
     private Producto producto;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_venta", nullable = true)
+    @JsonBackReference
     private Venta venta;
 
     // Constructor vacío

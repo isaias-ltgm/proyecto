@@ -1,5 +1,5 @@
 package com.senati.BodegaPepito.entity;
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -18,6 +18,7 @@ public class Categoria {
     private String descricion;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Producto> productos;
 
     // Constructor vacío

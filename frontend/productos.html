@@ -1,233 +1,79 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="Es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos | Bodega Pepito</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Minimarket Pepito</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="nav-brand">
-            <span class="brand-icon">🏪</span>
-            <span class="brand-name">Bodega Pepito</span>
+
+    <!-- TOPBAR (solo visible en móvil) -->
+    <div class="topbar">
+        <div class="title-business">
+            <span>Minimarket Pepito</span>
         </div>
-        <ul class="nav-links">
-            <li><a href="index.html" class="nav-link">Inicio</a></li>
-            <li><a href="categorias.html" class="nav-link">Categorías</a></li>
-            <li><a href="productos.html" class="nav-link active">Productos</a></li>
-            <li><a href="ventas.html" class="nav-link">Ventas</a></li>
-            <li><a href="detalles.html" class="nav-link">Detalle Ventas</a></li>
-        </ul>
-    </nav>
-
-    <main class="main-content">
-        <div class="page-header">
-            <div>
-                <h1>🛒 Productos</h1>
-                <p class="subtitle">Gestión del inventario de productos</p>
-            </div>
-            <button class="btn btn-primary" onclick="abrirModalNuevo()">+ Nuevo Producto</button>
-        </div>
-
-        <div id="alert-box" class="alert"></div>
-
-        <div class="search-bar">
-            <input type="text" class="search-input" id="buscador" placeholder="Buscar producto..." oninput="filtrarTabla()">
-        </div>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Categoría</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-body">
-                    <tr><td colspan="6" class="loading">Cargando...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
-
-    <!-- MODAL -->
-    <div class="modal-overlay" id="modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 id="modal-titulo">Nuevo Producto</h3>
-                <button class="modal-close" onclick="cerrarModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="campo-id">
-                <div class="form-group">
-                    <label>Nombre del Producto</label>
-                    <input type="text" id="campo-nombre" placeholder="Nombre del producto" maxlength="30">
-                </div>
-                <div class="form-group">
-                    <label>Precio Unitario (S/.)</label>
-                    <input type="number" id="campo-precio" placeholder="0.00" step="0.01" min="0">
-                </div>
-                <div class="form-group">
-                    <label>Stock</label>
-                    <input type="number" id="campo-stock" placeholder="0" min="0">
-                </div>
-                <div class="form-group">
-                    <label>Categoría</label>
-                    <select id="campo-categoria">
-                        <option value="">Sin categoría</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
-                <button class="btn btn-primary" onclick="guardar()">Guardar</button>
-            </div>
+        <div class="btn-menu">
+            <button class="hamburger" aria-label="Abrir menú">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </div>
 
-    <script src="js/api.js"></script>
-    <script>
-        let datos = [];
-        let categorias = [];
+    <!-- OVERLAY -->
+    <div class="overlay"></div>
 
-        async function cargar() {
-            try {
-                [datos, categorias] = await Promise.all([
-                    API.get('/productos'),
-                    API.get('/categorias')
-                ]);
-                renderTabla(datos);
-                cargarSelectCategorias();
-            } catch(e) {
-                document.getElementById('tabla-body').innerHTML =
-                    '<tr><td colspan="6" class="empty-state">Error al cargar los datos</td></tr>';
-            }
-        }
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">MINIMARKET PEPITO</div>
+        <ul>
+            <li>
+                <a href="index.html" data-page="home">
+                    <i class="fa-solid fa-house"></i><span>Inicio</span>
+                </a>
+            </li>
+            <li>
+                <a href="categorias.html" data-page="categorias">
+                    <i class="fa-solid fa-clipboard-list"></i><span>Categorías</span>
+                </a>
+            </li>
+            <li>
+                <a href="ventas.html" data-page="ventas">
+                    <i class="fa-solid fa-kitchen-set"></i><span>Ventas</span>
+                </a>
+            </li>
+            <li>
+                <a href="productos.html" class="activo" data-page="productos">
+                    <i class="fa-solid fa-user-check"></i><span>Productos</span>
+                </a>
+            </li>
+            <li>
+                <a href="detalles.html" data-page="detalles">
+                    <i class="fa-solid fa-pen-to-square"></i><span>Detalle Venta</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-        function cargarSelectCategorias() {
-            const sel = document.getElementById('campo-categoria');
-            const valorActual = sel.value;
-            sel.innerHTML = '<option value="">Sin categoría</option>';
-            categorias.forEach(c => {
-                sel.innerHTML += `<option value="${c.idCategoria}">${c.nombre}</option>`;
-            });
-            sel.value = valorActual;
-        }
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+        <nav class="breadcrumb">
+            <span>Productos</span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span id="breadcrumb-page">Detalle Venta</span>
+        </nav>
+        <div class="main-content">
 
-        function renderTabla(lista) {
-            const tbody = document.getElementById('tabla-body');
-            if (!lista.length) {
-                tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Sin productos registrados<p>Crea uno nuevo para comenzar</p></div></td></tr>';
-                return;
-            }
-            tbody.innerHTML = lista.map(p => `
-                <tr>
-                    <td><span class="badge badge-purple">${p.idProducto}</span></td>
-                    <td>${p.nombreProducto ?? '-'}</td>
-                    <td>S/. ${p.precioUnitario != null ? Number(p.precioUnitario).toFixed(2) : '-'}</td>
-                    <td>
-                        <span class="badge ${p.stock > 10 ? 'badge-green' : p.stock > 0 ? 'badge-blue' : 'badge-danger'}">
-                            ${p.stock ?? 0}
-                        </span>
-                    </td>
-                    <td>${p.categoria ? p.categoria.nombre : '<span style="color:var(--text-muted)">Sin categoría</span>'}</td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="btn btn-secondary btn-sm" onclick="abrirModalEditar(${p.idProducto})">✏️ Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="eliminar(${p.idProducto})">🗑️ Eliminar</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
+        </div>
+    </main>
 
-        function filtrarTabla() {
-            const q = document.getElementById('buscador').value.toLowerCase();
-            const filtrados = datos.filter(p =>
-                (p.nombreProducto ?? '').toLowerCase().includes(q) ||
-                (p.categoria?.nombre ?? '').toLowerCase().includes(q)
-            );
-            renderTabla(filtrados);
-        }
-
-        function abrirModalNuevo() {
-            document.getElementById('modal-titulo').textContent = 'Nuevo Producto';
-            document.getElementById('campo-id').value = '';
-            document.getElementById('campo-nombre').value = '';
-            document.getElementById('campo-precio').value = '';
-            document.getElementById('campo-stock').value = '';
-            document.getElementById('campo-categoria').value = '';
-            document.getElementById('modal').classList.add('open');
-        }
-
-        function abrirModalEditar(id) {
-            const p = datos.find(x => x.idProducto === id);
-            if (!p) return;
-            document.getElementById('modal-titulo').textContent = 'Editar Producto';
-            document.getElementById('campo-id').value = p.idProducto;
-            document.getElementById('campo-nombre').value = p.nombreProducto ?? '';
-            document.getElementById('campo-precio').value = p.precioUnitario ?? '';
-            document.getElementById('campo-stock').value = p.stock ?? '';
-            document.getElementById('campo-categoria').value = p.categoria?.idCategoria ?? '';
-            document.getElementById('modal').classList.add('open');
-        }
-
-        function cerrarModal() {
-            document.getElementById('modal').classList.remove('open');
-        }
-
-        async function guardar() {
-            const id = document.getElementById('campo-id').value;
-            const nombre = document.getElementById('campo-nombre').value.trim();
-            const precio = document.getElementById('campo-precio').value;
-            const stock = document.getElementById('campo-stock').value;
-            const catId = document.getElementById('campo-categoria').value;
-
-            if (!nombre) { mostrarAlerta('danger', 'El nombre es obligatorio'); return; }
-
-            const body = {
-                nombreProducto: nombre,
-                precioUnitario: precio ? parseFloat(precio) : null,
-                stock: stock ? parseInt(stock) : 0,
-                categoria: catId ? { idCategoria: parseInt(catId) } : null
-            };
-
-            try {
-                if (id) {
-                    await API.put(`/productos/${id}`, body);
-                    mostrarAlerta('success', 'Producto actualizado correctamente');
-                } else {
-                    await API.post('/productos', body);
-                    mostrarAlerta('success', 'Producto creado correctamente');
-                }
-                cerrarModal();
-                cargar();
-            } catch(e) {
-                mostrarAlerta('danger', 'Error al guardar el producto');
-            }
-        }
-
-        async function eliminar(id) {
-            if (!confirm('¿Eliminar este producto?')) return;
-            try {
-                await API.delete(`/productos/${id}`);
-                mostrarAlerta('success', 'Producto eliminado');
-                cargar();
-            } catch(e) {
-                mostrarAlerta('danger', 'Error al eliminar');
-            }
-        }
-
-        document.getElementById('modal').addEventListener('click', e => {
-            if (e.target === e.currentTarget) cerrarModal();
-        });
-
-        cargar();
-    </script>
+    <script src="js/productos.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,187 +1,79 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="Es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categorías | Bodega Pepito</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Minimarket Pepito</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="nav-brand">
-            <span class="brand-icon">🏪</span>
-            <span class="brand-name">Bodega Pepito</span>
+
+    <!-- TOPBAR (solo visible en móvil) -->
+    <div class="topbar">
+        <div class="title-business">
+            <span>Minimarket Pepito</span>
         </div>
-        <ul class="nav-links">
-            <li><a href="index.html" class="nav-link">Inicio</a></li>
-            <li><a href="categorias.html" class="nav-link active">Categorías</a></li>
-            <li><a href="productos.html" class="nav-link">Productos</a></li>
-            <li><a href="ventas.html" class="nav-link">Ventas</a></li>
-            <li><a href="detalles.html" class="nav-link">Detalle Ventas</a></li>
-        </ul>
-    </nav>
-
-    <main class="main-content">
-        <div class="page-header">
-            <div>
-                <h1>📦 Categorías</h1>
-                <p class="subtitle">Administra las categorías de productos</p>
-            </div>
-            <button class="btn btn-primary" onclick="abrirModalNuevo()">+ Nueva Categoría</button>
-        </div>
-
-        <div id="alert-box" class="alert"></div>
-
-        <div class="search-bar">
-            <input type="text" class="search-input" id="buscador" placeholder="Buscar categoría..." oninput="filtrarTabla()">
-        </div>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-body">
-                    <tr><td colspan="4" class="loading">Cargando...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
-
-    <!-- MODAL -->
-    <div class="modal-overlay" id="modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 id="modal-titulo">Nueva Categoría</h3>
-                <button class="modal-close" onclick="cerrarModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="campo-id">
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" id="campo-nombre" placeholder="Nombre de la categoría" maxlength="20">
-                </div>
-                <div class="form-group">
-                    <label>Descripción</label>
-                    <textarea id="campo-descripcion" placeholder="Descripción..." maxlength="200"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
-                <button class="btn btn-primary" onclick="guardar()">Guardar</button>
-            </div>
+        <div class="btn-menu">
+            <button class="hamburger" aria-label="Abrir menú">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </div>
 
-    <script src="js/api.js"></script>
-    <script>
-        let datos = [];
+    <!-- OVERLAY -->
+    <div class="overlay"></div>
 
-        async function cargar() {
-            try {
-                datos = await API.get('/categorias');
-                renderTabla(datos);
-            } catch(e) {
-                document.getElementById('tabla-body').innerHTML =
-                    '<tr><td colspan="4" class="empty-state">Error al cargar los datos</td></tr>';
-            }
-        }
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">MINIMARKET PEPITO</div>
+        <ul>
+            <li>
+                <a href="index.html"  data-page="home">
+                    <i class="fa-solid fa-house"></i><span>Inicio</span>
+                </a>
+            </li>
+            <li>
+                <a href="categorias.html" class="activo" data-page="categorias">
+                    <i class="fa-solid fa-clipboard-list"></i><span>Categorías</span>
+                </a>
+            </li>
+            <li>
+                <a href="ventas.html" data-page="ventas">
+                    <i class="fa-solid fa-kitchen-set"></i><span>Ventas</span>
+                </a>
+            </li>
+            <li>
+                <a href="productos.html" data-page="productos">
+                    <i class="fa-solid fa-user-check"></i><span>Productos</span>
+                </a>
+            </li>
+            <li>
+                <a href="detalles.html" data-page="detalles">
+                    <i class="fa-solid fa-pen-to-square"></i><span>Detalle Venta</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-        function renderTabla(lista) {
-            const tbody = document.getElementById('tabla-body');
-            if (!lista.length) {
-                tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state">Sin categorías registradas<p>Crea una nueva para comenzar</p></div></td></tr>';
-                return;
-            }
-            tbody.innerHTML = lista.map(c => `
-                <tr>
-                    <td><span class="badge badge-purple">${c.idCategoria}</span></td>
-                    <td>${c.nombre ?? '-'}</td>
-                    <td>${c.descricion ?? '-'}</td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="btn btn-secondary btn-sm" onclick="abrirModalEditar(${c.idCategoria})">✏️ Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="eliminar(${c.idCategoria})">🗑️ Eliminar</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+        <nav class="breadcrumb">
+            <span>Categorías</span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span id="breadcrumb-page">Ventas</span>
+        </nav>
+        <div class="main-content">
 
-        function filtrarTabla() {
-            const q = document.getElementById('buscador').value.toLowerCase();
-            const filtrados = datos.filter(c =>
-                (c.nombre ?? '').toLowerCase().includes(q) ||
-                (c.descricion ?? '').toLowerCase().includes(q)
-            );
-            renderTabla(filtrados);
-        }
+        </div>
+    </main>
 
-        function abrirModalNuevo() {
-            document.getElementById('modal-titulo').textContent = 'Nueva Categoría';
-            document.getElementById('campo-id').value = '';
-            document.getElementById('campo-nombre').value = '';
-            document.getElementById('campo-descripcion').value = '';
-            document.getElementById('modal').classList.add('open');
-        }
-
-        function abrirModalEditar(id) {
-            const cat = datos.find(c => c.idCategoria === id);
-            if (!cat) return;
-            document.getElementById('modal-titulo').textContent = 'Editar Categoría';
-            document.getElementById('campo-id').value = cat.idCategoria;
-            document.getElementById('campo-nombre').value = cat.nombre ?? '';
-            document.getElementById('campo-descripcion').value = cat.descricion ?? '';
-            document.getElementById('modal').classList.add('open');
-        }
-
-        function cerrarModal() {
-            document.getElementById('modal').classList.remove('open');
-        }
-
-        async function guardar() {
-            const id = document.getElementById('campo-id').value;
-            const body = {
-                nombre: document.getElementById('campo-nombre').value.trim(),
-                descricion: document.getElementById('campo-descripcion').value.trim()
-            };
-            if (!body.nombre) { mostrarAlerta('danger', 'El nombre es obligatorio'); return; }
-            try {
-                if (id) {
-                    await API.put(`/categorias/${id}`, body);
-                    mostrarAlerta('success', 'Categoría actualizada correctamente');
-                } else {
-                    await API.post('/categorias', body);
-                    mostrarAlerta('success', 'Categoría creada correctamente');
-                }
-                cerrarModal();
-                cargar();
-            } catch(e) {
-                mostrarAlerta('danger', 'Error al guardar la categoría');
-            }
-        }
-
-        async function eliminar(id) {
-            if (!confirm('¿Eliminar esta categoría?')) return;
-            try {
-                await API.delete(`/categorias/${id}`);
-                mostrarAlerta('success', 'Categoría eliminada');
-                cargar();
-            } catch(e) {
-                mostrarAlerta('danger', 'Error al eliminar');
-            }
-        }
-
-        document.getElementById('modal').addEventListener('click', e => {
-            if (e.target === e.currentTarget) cerrarModal();
-        });
-
-        cargar();
-    </script>
+    <script src="js/categorias.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,6 +1,10 @@
 package com.senati.BodegaPepito.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import java.util.List;
 
 @Entity
 @Table(name = "producto")
@@ -19,9 +23,14 @@ public class Producto {
     @Column(name = "stock")
     private Integer stock;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_categoria", nullable = true)
+    @ManyToOne
+    @JoinColumn(name = "id_categoria")
+    @JsonBackReference
     private Categoria categoria;
+
+    @OneToMany(mappedBy = "producto")
+    @JsonManagedReference
+    private List<DetalleVenta> detalles;
 
     // Constructor vacío
     public Producto() {}
