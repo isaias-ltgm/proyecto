@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventas | Bodega Pepito</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="brand-icon">🏪</span>
+            <span class="brand-name">Bodega Pepito</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Inicio</a></li>
+            <li><a href="categorias.html" class="nav-link">Categorías</a></li>
+            <li><a href="productos.html" class="nav-link">Productos</a></li>
+            <li><a href="ventas.html" class="nav-link active">Ventas</a></li>
+            <li><a href="detalles.html" class="nav-link">Detalle Ventas</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <h1>💰 Ventas</h1>
+                <p class="subtitle">Registro y gestión de ventas</p>
+            </div>
+            <button class="btn btn-primary" onclick="abrirModalNuevo()">+ Nueva Venta</button>
+        </div>
+
+        <div id="alert-box" class="alert"></div>
+
+        <div class="search-bar">
+            <input type="text" class="search-input" id="buscador" placeholder="Buscar por ID o total..." oninput="filtrarTabla()">
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Total (S/.)</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body">
+                    <tr><td colspan="4" class="loading">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-titulo">Nueva Venta</h3>
+                <button class="modal-close" onclick="cerrarModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="campo-id">
+                <div class="form-group">
+                    <label>Total Venta (S/.)</label>
+                    <input type="number" id="campo-total" placeholder="0" min="0">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        let datos = [];
+
+        async function cargar() {
+            try {
+                datos = await API.get('/ventas');
+                renderTabla(datos);
+            } catch(e) {
+                document.getElementById('tabla-body').innerHTML =
+                    '<tr><td colspan="4" class="empty-state">Error al cargar los datos</td></tr>';
+            }
+        }
+
+        function formatFecha(f) {
+            if (!f) return '-';
+            const d = new Date(f);
+            return d.toLocaleString('es-PE', { dateStyle: 'medium', timeStyle: 'short' });
+        }
+
+        function renderTabla(lista) {
+            const tbody = document.getElementById('tabla-body');
+            if (!lista.length) {
+                tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state">Sin ventas registradas<p>Crea una nueva para comenzar</p></div></td></tr>';
+                return;
+            }
+            tbody.innerHTML = lista.map(v => `
+                <tr>
+                    <td><span class="badge badge-purple">${v.idVenta}</span></td>
+                    <td>${formatFecha(v.fecha)}</td>
+                    <td><strong>S/. ${v.totalVenta != null ? Number(v.totalVenta).toLocaleString('es-PE') : '-'}</strong></td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-secondary btn-sm" onclick="abrirModalEditar(${v.idVenta})">✏️ Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminar(${v.idVenta})">🗑️ Eliminar</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filtrarTabla() {
+            const q = document.getElementById('buscador').value.toLowerCase();
+            const filtrados = datos.filter(v =>
+                String(v.idVenta).includes(q) ||
+                String(v.totalVenta ?? '').includes(q)
+            );
+            renderTabla(filtrados);
+        }
+
+        function abrirModalNuevo() {
+            document.getElementById('modal-titulo').textContent = 'Nueva Venta';
+            document.getElementById('campo-id').value = '';
+            document.getElementById('campo-total').value = '';
+            document.getElementById('modal').classList.add('open');
+        }
+
+        function abrirModalEditar(id) {
+            const v = datos.find(x => x.idVenta === id);
+            if (!v) return;
+            document.getElementById('modal-titulo').textContent = 'Editar Venta';
+            document.getElementById('campo-id').value = v.idVenta;
+            document.getElementById('campo-total').value = v.totalVenta ?? '';
+            document.getElementById('modal').classList.add('open');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal').classList.remove('open');
+        }
+
+        async function guardar() {
+            const id = document.getElementById('campo-id').value;
+            const total = document.getElementById('campo-total').value;
+            if (total === '') { mostrarAlerta('danger', 'El total es obligatorio'); return; }
+
+            const body = { totalVenta: parseInt(total) };
+
+            try {
+                if (id) {
+                    await API.put(`/ventas/${id}`, body);
+                    mostrarAlerta('success', 'Venta actualizada correctamente');
+                } else {
+                    await API.post('/ventas', body);
+                    mostrarAlerta('success', 'Venta creada correctamente');
+                }
+                cerrarModal();
+                cargar();
+            } catch(e) {
+                mostrarAlerta('danger', 'Error al guardar la venta');
+            }
+        }
+
+        async function eliminar(id) {
+            if (!confirm('¿Eliminar esta venta? También se eliminarán sus detalles.')) return;
+            try {
+                await API.delete(`/ventas/${id}`);
+                mostrarAlerta('success', 'Venta eliminada');
+                cargar();
+            } catch(e) {
+                mostrarAlerta('danger', 'Error al eliminar');
+            }
+        }
+
+        document.getElementById('modal').addEventListener('click', e => {
+            if (e.target === e.currentTarget) cerrarModal();
+        });
+
+        cargar();
+    </script>
+</body>
+</html>

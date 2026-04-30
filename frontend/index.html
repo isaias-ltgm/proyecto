@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bodega Pepito</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="brand-icon">🏪</span>
+            <span class="brand-name">Bodega Pepito</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link active">Inicio</a></li>
+            <li><a href="categorias.html" class="nav-link">Categorías</a></li>
+            <li><a href="productos.html" class="nav-link">Productos</a></li>
+            <li><a href="ventas.html" class="nav-link">Ventas</a></li>
+            <li><a href="detalles.html" class="nav-link">Detalle Ventas</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="dashboard-header">
+            <h1>Panel de Control</h1>
+            <p class="subtitle">Resumen general de la bodega</p>
+        </div>
+
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon cat-icon">📦</div>
+                <div class="stat-info">
+                    <span class="stat-label">Categorías</span>
+                    <span class="stat-value" id="total-categorias">--</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon prod-icon">🛒</div>
+                <div class="stat-info">
+                    <span class="stat-label">Productos</span>
+                    <span class="stat-value" id="total-productos">--</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon venta-icon">💰</div>
+                <div class="stat-info">
+                    <span class="stat-label">Ventas</span>
+                    <span class="stat-value" id="total-ventas">--</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon detalle-icon">📋</div>
+                <div class="stat-info">
+                    <span class="stat-label">Detalles</span>
+                    <span class="stat-value" id="total-detalles">--</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <h2>Acceso Rápido</h2>
+            <div class="link-cards">
+                <a href="categorias.html" class="link-card">
+                    <span class="link-icon">📦</span>
+                    <span class="link-title">Gestionar Categorías</span>
+                    <span class="link-desc">Crear, editar y eliminar categorías</span>
+                </a>
+                <a href="productos.html" class="link-card">
+                    <span class="link-icon">🛒</span>
+                    <span class="link-title">Gestionar Productos</span>
+                    <span class="link-desc">Administrar el inventario</span>
+                </a>
+                <a href="ventas.html" class="link-card">
+                    <span class="link-icon">💰</span>
+                    <span class="link-title">Gestionar Ventas</span>
+                    <span class="link-desc">Registrar y consultar ventas</span>
+                </a>
+                <a href="detalles.html" class="link-card">
+                    <span class="link-icon">📋</span>
+                    <span class="link-title">Detalle de Ventas</span>
+                    <span class="link-desc">Ver el desglose de cada venta</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script>
+        async function cargarEstadisticas() {
+            try {
+                const [categorias, productos, ventas, detalles] = await Promise.all([
+                    API.get('/categorias'),
+                    API.get('/productos'),
+                    API.get('/ventas'),
+                    API.get('/detalles-venta')
+                ]);
+                document.getElementById('total-categorias').textContent = categorias.length;
+                document.getElementById('total-productos').textContent = productos.length;
+                document.getElementById('total-ventas').textContent = ventas.length;
+                document.getElementById('total-detalles').textContent = detalles.length;
+            } catch (e) {
+                console.error('Error cargando estadísticas', e);
+            }
+        }
+        cargarEstadisticas();
+    </script>
+</body>
+</html>
