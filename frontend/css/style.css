@@ -142,6 +142,13 @@ body::before {
     width: 18px;
     text-align: center;
 }
+.card i {
+  margin-right: 5px;
+}
+
+button i {
+  margin-right: 5px;
+}
 .main-content {
   padding: 20px;
 }
