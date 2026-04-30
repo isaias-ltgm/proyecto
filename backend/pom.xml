@@ -8,8 +8,13 @@
 		<version>3.5.14</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+<<<<<<< HEAD
 	<groupId>com.senati</groupId>
 	<artifactId>BodegaPepito</artifactId>
+=======
+	<groupId>com.minemarket</groupId>
+	<artifactId>minemarket</artifactId>
+>>>>>>> f752f04fa51dce4c5e1f7f357265dc1136b85954
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
